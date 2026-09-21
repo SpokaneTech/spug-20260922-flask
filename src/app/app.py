@@ -1,6 +1,10 @@
+import os
+from hmac import compare_digest
+
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
+app.config["AUTH_TOKEN"] = os.environ.get("TASK_API_TOKEN", "example-token")
 
 
 # A dictionary is our temporary in-memory data store. Restarting the server resets it.
@@ -24,6 +28,19 @@ next_task_id = 3
 @app.route("/", methods=["GET"])
 def welcome():
     return jsonify({"message": "Welcome to the Task API"})
+
+
+@app.before_request
+def require_auth_token():
+    """Require a bearer token for every API endpoint except the welcome route."""
+    if request.endpoint in ("welcome", None):
+        return None
+
+    scheme, _, token = request.headers.get("Authorization", "").partition(" ")
+    if scheme != "Bearer" or not compare_digest(token, app.config["AUTH_TOKEN"]):
+        return jsonify({"error": "A valid bearer token is required"}), 401
+
+    return None
 
 
 @app.route("/tasks", methods=["GET"])
