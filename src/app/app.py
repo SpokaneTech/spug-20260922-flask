@@ -4,8 +4,8 @@ app = Flask(__name__)
 
 
 @app.route("/", methods=["GET"])
-def get_item():
-    return jsonify({"status": "active"})
+def welcome():
+    return jsonify({"message": "Welcome to the Task API"})
 
 
 def main():
