@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 dependencies = [
     "flask",
+    "flask-smorest",
 ]
 description = "Your first Python API; Flask edition"
 readme = "README.md"
