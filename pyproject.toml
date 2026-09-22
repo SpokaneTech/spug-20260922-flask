@@ -33,7 +33,9 @@ dev = [
     "typing-extensions",
 
 ]
-
+docker = [
+    "gunicorn",
+]
 
 [tool.bandit]
 exclude_dirs = [
